@@ -1,7 +1,7 @@
  Git Strategy
 ===================
 
-This document describes the code management strategy for **aeon-document-reactor**
+This document describes the code management strategy for **CustomizableVizBoard**
 
 **Project Owner: Tony Zhang** 
  
@@ -9,7 +9,7 @@ This document describes the code management strategy for **aeon-document-reactor
 
 ### Commit messages
 Commit messages for this project should begin with the cerner associate id followed by a description of the change.
-* Example: "TZ029887 Fix the property filtering logic"
+* Example: "Tony Fix the property filtering logic"
 
 ### Branch Strategy
 * Create your own feature branch off of **dev** giving it a meaningful short name
