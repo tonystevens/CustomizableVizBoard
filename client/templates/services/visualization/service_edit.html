@@ -1,0 +1,281 @@
+<template name="serviceEdit">
+  <form class="main form">
+    <div class="btn-group {{errorClass 'chartTemplateId'}}">
+      <label class="control-label" for="chartTemplateId">Chart Type</label><br>
+      <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-primary {{isPicked chartTemplateId 'circle_tree' 'active'}}">
+          <input type="radio" name="chartTemplateId" id="circle_tree" value="circle_tree" {{isPicked chartTemplateId 'circle_tree' 'checked'}}> Circle Tree
+        </label>
+        <label class="btn btn-primary {{isPicked chartTemplateId 'collapsible_tree' 'active'}}">
+          <input type="radio" name="chartTemplateId" id="collapsible_tree" value="collapsible_tree" {{isPicked chartTemplateId 'collapsible_tree' 'checked'}}> Collapsible Tree
+        </label>
+        <label class="btn btn-primary {{isPicked chartTemplateId 'indented_tree' 'active'}}">
+          <input type="radio" name="chartTemplateId" id="indented_tree" value="indented_tree" {{isPicked chartTemplateId 'indented_tree' 'checked'}}> Indented Tree
+        </label>
+        <span class="help-block">{{errorMessage 'chartTemplateId'}}</span>
+      </div>
+    </div>
+    <br><br>
+    <div class="form-group {{errorClass 'dataUrl'}}">
+      <label class="control-label" for="dataUrl">Data Url</label><br>
+      <input name="dataUrl" id="dataUrl" type="text" value="{{dataUrl}}" placeholder="REST Url to retrieve data" class="form-control"/>
+      <span class="help-block">{{errorMessage 'dataUrl'}}</span>
+    </div>
+    <div class="form-group {{errorClass 'nickName'}}">
+      <label class="control-label" for="nickName">Name</label><br>
+      <input name="nickName" id="nickName" type="text" value="{{nickName}}" placeholder="A nick name of the service" class="form-control"/>
+      <span class="help-block">{{errorMessage 'nickName'}}</span>
+    </div>
+    <div class="form-group {{errorClass 'description'}}">
+      <label class="control-label" for="description">Brief Description</label><br>
+      <input name="description" id="description" type="text" value="{{description}}" placeholder="A brief description of the service" class="form-control"/>
+      <span class="help-block">{{errorMessage 'description'}}</span>
+    </div>
+
+    <input type="submit" value="Submit" id="submit-button" class="btn btn-primary"/>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal">Customize and Submit</button>
+    <a class="btn btn-danger delete" href="#">Delete service</a>
+
+    <!--Customize Modal-->
+    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="detailModalLabel">Customize Chart Details</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="childrenId" class="col-xs-2 control-label">Child Identifier</label>
+                <div class="col-xs-4">
+                  <input type="text" class="form-control" id="childrenId" value="{{childrenId}}" placeholder="Property for sub-structure">
+                </div>
+              </div>
+              <!--Display Properties-->
+                {{#if isEmpty property}}
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label">Properties</label>
+                        <div class="col-xs-4"><input type="text" class="form-control" name="property[0].propertyName" placeholder="Property Name"></div>
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control" name="property[0].label" placeholder="Label">
+                        </div>
+                        <div class="col-xs-1">
+                            <button type="button" class="btn btn-default addProperty"><i class="glyphicon glyphicon-plus"></i></button>
+                        </div>
+                    </div>
+                {{/if}}
+                {{#each property}}
+                    <div class="form-group" data-property-index="{{@index}}">
+                      {{#if isFirstElement @index}}
+                          <label class="col-xs-2 control-label">Properties</label>
+                          <div class="col-xs-4"><input type="text" class="form-control" name="property[{{@index}}].propertyName" value="{{propertyName}}" placeholder="Property Name"></div>
+                      {{else}}
+                          <div class="col-xs-offset-2 col-xs-4"><input type="text" class="form-control" name="property[{{@index}}].propertyName" value="{{propertyName}}" placeholder="Property Name"></div>
+                      {{/if}}
+                      <div class="col-xs-3">
+                          <input type="text" class="form-control" name="property[{{@index}}].label" value="{{label}}" placeholder="Label">
+                      </div>
+                      <div class="col-xs-1">
+                          {{#if isFirstElement @index}}
+                              <button type="button" class="btn btn-default addProperty"><i class="glyphicon glyphicon-plus"></i></button>
+                          {{else}}
+                              <button type="button" class="btn btn-default removeProperty"><i class="glyphicon glyphicon-minus"></i></button>
+                          {{/if}}
+                      </div>
+                    </div>
+                  {{/each}}
+              <!--TEMPLATE: Display Properties-->
+              <div class="form-group hide" id="propertyTemplate">
+                <div class="col-xs-offset-2 col-xs-4">
+                  <input class="form-control" type="text" name="propertyName" placeholder="Property Name" />
+                </div>
+                <div class="col-xs-3">
+                  <input type="text" class="form-control" name="label" placeholder="Label">
+                </div>
+                <div class="col-xs-1">
+                  <button type="button" class="btn btn-default removeProperty"><i class="glyphicon glyphicon-minus"></i></button>
+                </div>
+              </div>
+
+              <!--Display Property Filters-->
+              {{#if isEmpty propertyFilter}}
+                  <div class="form-group">
+                      <label class="col-xs-2 control-label">Property Filters</label>
+                      <label class="col-xs-1 control-label">When</label>
+                      <div class="col-xs-3">
+                          <input type="text" class="form-control" name="propertyFilter[0].propertyName" placeholder="Property Name">
+                      </div>
+                      <div class="col-xs-2">
+                          <select class="form-control" name="propertyFilter[0].filterOption">
+                              <option value="is">is</option>
+                              <option value="is not">is not</option>
+                              <option value="in">in</option>
+                          </select>
+                      </div>
+                      <div class="col-xs-3">
+                          <input type="text" class="form-control" name="propertyFilter[0].value" placeholder="Value">
+                      </div>
+                      <div class="col-xs-1">
+                          <button type="button" class="btn btn-default addPropertyFilter"><i class="glyphicon glyphicon-plus"></i></button>
+                      </div>
+                  </div>
+              {{/if}}
+              {{#each propertyFilter}}
+                  <div class="form-group" data-propertyFilter-index="{{@index}}">
+                      {{#if isFirstElement @index}}
+                          <label class="col-xs-2 control-label">Property Filters</label>
+                          <label class="col-xs-1 control-label">When</label>
+                          <div class="col-xs-3">
+                              <input type="text" class="form-control" name="propertyFilter[{{@index}}].propertyName" value="{{propertyName}}" placeholder="Property Name">
+                          </div>
+                      {{else}}
+                          <label class="col-xs-offset-2 col-xs-1">And</label>
+                          <div class="col-xs-3">
+                              <input type="text" class="form-control" name="propertyFilter[{{@index}}].propertyName" value="{{propertyName}}" placeholder="Property Name">
+                          </div>
+                      {{/if}}
+                      <div class="col-xs-2">
+                          <select class="form-control" name="propertyFilter[{{@index}}].filterOption">
+                              <option value="is" {{isPicked filterOption 'is' 'selected'}}>is</option>
+                              <option value="is not" {{isPicked filterOption 'is not' 'selected'}}>is not</option>
+                              <option value="in" {{isPicked filterOption 'in' 'selected'}}>in</option>
+                          </select>
+                      </div>
+                      <div class="col-xs-3">
+                          <input type="text" class="form-control" name="propertyFilter[{{@index}}].value" value="{{value}}" placeholder="Value">
+                      </div>
+                      <div class="col-xs-1">
+                        {{#if isFirstElement @index}}
+                            <button type="button" class="btn btn-default addPropertyFilter"><i class="glyphicon glyphicon-plus"></i></button>
+                        {{else}}
+                            <button type="button" class="btn btn-default removePropertyFilter"><i class="glyphicon glyphicon-minus"></i></button>
+                        {{/if}}
+                      </div>
+                  </div>
+              {{/each}}
+              <!--TEMPLATE: Display Property Filters-->
+              <div class="form-group hide" id="propertyFilterTemplate">
+                <label class="col-xs-offset-2 col-xs-1">And</label>
+                <div class="col-xs-3">
+                  <input type="text" class="form-control" name="propertyName" placeholder="Property Name">
+                </div>
+                <div class="col-xs-2">
+                  <select class="form-control" name="filterOption">
+                    <option value="is" selected>is</option>
+                    <option value="is not">is not</option>
+                    <option value="in">in</option>
+                  </select>
+                </div>
+                <div class="col-xs-3">
+                  <input type="text" class="form-control" name="value" placeholder="Value">
+                </div>
+                <div class="col-xs-1">
+                  <button type="button" class="btn btn-default removePropertyFilter"><i class="glyphicon glyphicon-minus"></i></button>
+                </div>
+              </div>
+
+              <!--Color and Filters-->
+              {{#if isEmpty colorFilter}}
+                  <div class="form-group">
+                      <label class="col-xs-2 control-label">Color & Filters</label>
+                      <div class="col-xs-2 input-group colorPicker">
+                          <input type="text" class="form-control" name="colorFilter[0].color"/><span class="input-group-addon"><i></i></span>
+                      </div>
+                      <br>
+                      <label class="col-xs-offset-2 col-xs-1 control-label">When</label>
+                      <div class="col-xs-3">
+                          <input type="text" class="form-control" name="colorFilter[0].propertyName" placeholder="Property Name">
+                      </div>
+                      <div class="col-xs-2">
+                          <select class="form-control" name="colorFilter[0].filterOption">
+                              <option value="is">is</option>
+                              <option value="is not">is not</option>
+                              <option value="in">in</option>
+                          </select>
+                      </div>
+                      <div class="col-xs-3">
+                          <input type="text" class="form-control" name="colorFilter[0].value" placeholder="Value">
+                      </div>
+                      <div class="col-xs-1">
+                          <button type="button" class="btn btn-default addColorFilter"><i class="glyphicon glyphicon-plus"></i></button>
+                      </div>
+                  </div>
+              {{/if}}
+              {{#each colorFilter}}
+                  <div class="form-group" data-colorFilter-index="{{@index}}">
+                      {{#if isFirstElement @index}}
+                          <label class="col-xs-2 control-label">Color & Filters</label>
+                          <div class="col-xs-2 input-group colorPicker">
+                              <input type="text" class="form-control" name="colorFilter[{{@index}}].color" value="{{color}}"/><span class="input-group-addon"><i></i></span>
+                          </div>
+                          <br>
+                          <label class="col-xs-offset-2 col-xs-1 control-label">When</label>
+                          <div class="col-xs-3">
+                              <input type="text" class="form-control" name="colorFilter[{{@index}}].propertyName" value="{{propertyName}}" placeholder="Property Name">
+                          </div>
+                      {{else}}
+                          <div class="col-xs-offset-2 col-xs-2 input-group colorPicker">
+                              <input type="text" class="form-control" name="colorFilter[{{@index}}].color" value="{{color}}"/><span class="input-group-addon"><i></i></span>
+                          </div>
+                          <br>
+                          <label class="col-xs-offset-2 col-xs-1 control-label">When</label>
+                          <div class="col-xs-3">
+                              <input type="text" class="form-control" name="colorFilter[{{@index}}].propertyName" value="{{propertyName}}" placeholder="Property Name">
+                          </div>
+                      {{/if}}
+                      <div class="col-xs-2">
+                          <select class="form-control" name="colorFilter[{{@index}}].filterOption">
+                              <option value="is" {{isPicked filterOption 'is' 'selected'}}>is</option>
+                              <option value="is not" {{isPicked filterOption 'is not' 'selected'}}>is not</option>
+                              <option value="in" {{isPicked filterOption 'in' 'selected'}}>in</option>
+                          </select>
+                      </div>
+                      <div class="col-xs-3">
+                          <input type="text" class="form-control" name="colorFilter[{{@index}}].value" value="{{value}}" placeholder="Value">
+                      </div>
+                      <div class="col-xs-1">
+                      {{#if isFirstElement @index}}
+                          <button type="button" class="btn btn-default addColorFilter"><i class="glyphicon glyphicon-plus"></i></button>
+                      {{else}}
+                          <button type="button" class="btn btn-default removeColorFilter"><i class="glyphicon glyphicon-minus"></i></button>
+                      {{/if}}
+                      </div>
+                  </div>
+              {{/each}}
+              <!--TEMPLATE: Color and Filters-->
+              <div class="form-group hide" id="colorFilterTemplate">
+                <div class="col-xs-offset-2 col-xs-2 input-group colorPicker">
+                  <input type="text" class="form-control" name="color"/><span class="input-group-addon"><i></i></span>
+                </div>
+                <br>
+                <label class="col-xs-offset-2 col-xs-1 control-label">When</label>
+                <div class="col-xs-3">
+                  <input type="text" class="form-control" name="propertyName" placeholder="Property Name">
+                </div>
+                <div class="col-xs-2">
+                  <select class="form-control" name="filterOption">
+                    <option value="is" selected>is</option>
+                    <option value="is not">is not</option>
+                    <option value="in">in</option>
+                  </select>
+                </div>
+                <div class="col-xs-3">
+                  <input type="text" class="form-control" name="value" placeholder="Value">
+                </div>
+                <div class="col-xs-1">
+                  <button type="button" class="btn btn-default removeColorFilter"><i class="glyphicon glyphicon-minus"></i></button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="saveModalChange">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</template>

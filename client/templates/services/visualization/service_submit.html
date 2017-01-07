@@ -1,0 +1,39 @@
+<template name="serviceSubmit">
+    <form class="main form">
+        <div class="btn-group {{errorClass 'chartTemplateId'}}">
+            <label class="control-label" for="chartTemplateId">Chart Type</label><br>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary">
+                    <input type="radio" name="chartTemplateId" id="circle_tree" value="circle_tree"> Circle Tree
+                </label>
+                <label class="btn btn-primary active">
+                    <input type="radio" name="chartTemplateId" id="collapsible_tree" value="collapsible_tree"> Collapsible Tree
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="chartTemplateId" id="indented_tree" value="indented_tree"> Indented Tree
+                </label>
+                <!-- <label class="btn btn-primary">
+                  <input type="radio" name="chartTemplateId" id="info_table" value="info_table"> Info Table
+                </label> -->
+                <span class="help-block">{{errorMessage 'chartTemplateId'}}</span>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group {{errorClass 'dataUrl'}}">
+            <label class="control-label" for="dataUrl">Data Url</label><br>
+            <input name="dataUrl" id="dataUrl" type="text" value="{{dataUrl}}" placeholder="REST Url to retrieve data" class="form-control"/>
+            <span class="help-block">{{errorMessage 'dataUrl'}}</span>
+        </div>
+        <div class="form-group {{errorClass 'nickName'}}">
+            <label class="control-label" for="nickName">Name</label><br>
+            <input name="nickName" id="nickName" type="text" value="{{nickName}}" placeholder="A nick name of the service" class="form-control"/>
+            <span class="help-block">{{errorMessage 'nickName'}}</span>
+        </div>
+        <div class="form-group {{errorClass 'description'}}">
+            <label class="control-label" for="description">Brief Description</label><br>
+            <input name="description" id="description" type="text" value="{{description}}" placeholder="A brief description of the service" class="form-control"/>
+            <span class="help-block">{{errorMessage 'description'}}</span>
+        </div>
+    <input type="submit" value="Submit" class="btn btn-primary"/>
+  </form>
+</template>

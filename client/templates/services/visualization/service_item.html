@@ -1,0 +1,15 @@
+<template name="serviceItem">
+  {{#if ownService}}
+      <div class="service col-md-3">
+          <div class="thumbnail">
+              <div class="caption">
+                  <h3>{{nickName}}</h3>
+                  <p>{{description}}</p>
+                  <p><a href="{{pathFor 'displayService'}}" class="discuss btn btn-default">View</a></p>
+                  <p><a href="{{pathFor 'serviceEdit'}}">Edit</a></p>
+              </div>
+          </div>
+      </div>
+  {{/if}}
+</template>
+

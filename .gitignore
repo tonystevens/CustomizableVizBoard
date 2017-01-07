@@ -1,0 +1,14 @@
+.classpath
+.project
+.settings
+target
+.idea
+*.iml
+*.ipr
+*.iws
+.fbprefs
+temp.xml
+derby.log
+.clover
+bin
+*.orig

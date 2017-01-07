@@ -1,0 +1,9 @@
+<template name="indexPage">
+    <div class="posts">
+        {{#if currentUser}}
+            <div class="post">
+                <a href="{{pathFor 'servicesList'}}" class="index-nav-btn btn btn-default">View Service</a>
+            </div>
+        {{/if}}
+    </div>
+</template>
